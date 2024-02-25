@@ -9,34 +9,38 @@ datasource db {
 }
 
 model asset {
-  id                        Bytes                      @id
-  alt_id                    Bytes?
-  specification_version     specification_versions?
-  specification_asset_class specification_asset_class?
-  owner                     Bytes?
-  owner_type                owner_type                 @default(single)
-  delegate                  Bytes?
-  frozen                    Boolean                    @default(false)
-  supply                    BigInt                     @default(1)
-  supply_mint               Bytes?
-  compressed                Boolean                    @default(false)
-  compressible              Boolean                    @default(false)
-  seq                       BigInt?
-  tree_id                   Bytes?
-  leaf                      Bytes?
-  nonce                     BigInt?
-  royalty_target_type       royalty_target_type        @default(creators)
-  royalty_target            Bytes?
-  royalty_amount            Int                        @default(0)
-  asset_data                Bytes?
-  created_at                DateTime?                  @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamptz(6)
-  burnt                     Boolean                    @default(false)
-  slot_updated              BigInt?
-  data_hash                 String?                    @db.Char(50)
-  creator_hash              String?                    @db.Char(50)
-  owner_delegate_seq        BigInt?
-  leaf_seq                  BigInt?
-  base_info_seq             BigInt?
+  id                            Bytes                      @id
+  alt_id                        Bytes?
+  specification_version         specification_versions?
+  specification_asset_class     specification_asset_class?
+  owner                         Bytes?
+  owner_type                    owner_type                 @default(single)
+  delegate                      Bytes?
+  frozen                        Boolean                    @default(false)
+  supply                        BigInt                     @default(1)
+  supply_mint                   Bytes?
+  compressed                    Boolean                    @default(false)
+  compressible                  Boolean                    @default(false)
+  seq                           BigInt?
+  tree_id                       Bytes?
+  leaf                          Bytes?
+  nonce                         BigInt?
+  royalty_target_type           royalty_target_type        @default(creators)
+  royalty_target                Bytes?
+  royalty_amount                Int                        @default(0)
+  asset_data                    Bytes?
+  created_at                    DateTime?                  @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamptz(6)
+  burnt                         Boolean                    @default(false)
+  slot_updated                  BigInt?
+  data_hash                     String?                    @db.Char(50)
+  creator_hash                  String?                    @db.Char(50)
+  owner_delegate_seq            BigInt?
+  leaf_seq                      BigInt?
+  base_info_seq                 BigInt?
+  slot_updated_metadata_account BigInt?
+  slot_updated_token_account    BigInt?
+  slot_updated_mint_account     BigInt?
+  slot_updated_cnft_transaction BigInt?
 
   @@index([delegate], map: "asset_delegate")
   @@index([leaf], map: "asset_leaf")
@@ -139,6 +143,7 @@ model cl_audits_v2 {
   instruction instruction
 
   @@unique([tree, leaf_idx, seq], map: "unique_tree_leafidx_seq")
+  @@index([tree, seq], map: "tree_seq_idx")
 }
 
 model cl_items {
